@@ -6,7 +6,6 @@ Welcome to DigiFriend!
 
 Your friend who lives in your phone and thinks in the cloud.
 This is the source code for the Android App.
-NOT OPEN SOURCE.
 
 © Abhay Tripathi
 
