@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.abhaytr.digifriend.MainActivity">
+
+    <ImageView
+        android:id="@+id/friend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/celebration"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/header_main"
+        android:background="#000000"
+        android:textColor="#ffffff"
+        android:layout_alignParentTop="true" 
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="DIGIFRIEND"
+        android:textSize="35dp"
+        android:paddingTop="7dp" 
+        android:paddingBottom="0dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/header_credits"
+        android:background="#000000"
+        android:textColor="#ffffff"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="by Abhay Tripathi"
+        android:layout_below="@+id/header_main"
+        android:textSize="17dp"
+        android:paddingTop="0dp" 
+        android:paddingBottom="7dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/status"
+        android:background="@drawable/default_bubble"
+        android:textColor="#ffffff"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/header_credits"
+        android:textStyle="bold"
+        android:text="🙂 Say whatever you want!"
+        android:textSize="24dp"
+        android:padding="7dp"
+        android:layout_marginTop="21dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/credits"
+        android:background="@drawable/credits_bubble"
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true" 
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="Credits"
+        android:textSize="21dp"
+        android:padding="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/about"
+        android:background="@drawable/about_bubble"
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true" 
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="About"
+        android:textSize="21dp"
+        android:padding="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/update"
+        android:background="@drawable/update_bubble"
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true" 
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="Update"
+        android:textSize="21dp"
+        android:padding="5dp" />
+
+</RelativeLayout>
