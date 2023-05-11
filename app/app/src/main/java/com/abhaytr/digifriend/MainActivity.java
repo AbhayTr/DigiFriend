@@ -484,6 +484,7 @@ public class MainActivity extends Activity implements OnInitListener
                 return params;
             }
         };
+        brain_request.setRetryPolicy(new DefaultRetryPolicy(7200000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(brain_request);
     }
 
