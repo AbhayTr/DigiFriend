@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements OnInitListener
     private ImageView celebration;
     final private String BRAIN_OFF = "I am unable to use my brain right now. Please ensure internet connection as I think in the cloud and I need internet for that. If you are connected to the internet and yet I am not able to use my brain, then please click the update button located below me as my brain might have moved somewhere. Please restart the app or try again after some time.";
     private String brain_url = "";
-    final private String app_version = "1.0.1";
+    final private String app_version = "1.0.2";
     final private String brain_location_url = "https://abhaytr.github.io/digifriend/Brain.txt";
     private String uid;
     private ScheduledExecutorService ses;
