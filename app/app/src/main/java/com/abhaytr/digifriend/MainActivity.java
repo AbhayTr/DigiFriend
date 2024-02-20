@@ -11,9 +11,13 @@ This is the source code for the Android App.
 
 */
 
+import com.abhaytr.digifriend.BuildConfig;
+
 import android.os.*;
 import android.view.*;
 import android.widget.*;
+
+import java.io.IOException;
 import java.util.*;
 import android.speech.tts.*;
 import android.media.*;
@@ -45,13 +49,14 @@ public class MainActivity extends Activity implements OnInitListener
     private AnimationDrawable celebration_body;
     private TextView status;
     TextView credits;
+    TextView resetBtn;
     TextView about;
     private TextView update;
     private ImageView friend;
     private ImageView celebration;
     final private String BRAIN_OFF = "I am unable to use my brain right now. Please ensure internet connection as I think in the cloud and I need internet for that. If you are connected to the internet and yet I am not able to use my brain, then please click the update button located below me as my brain might have moved somewhere. Please restart the app or try again after some time.";
     private String brain_url = "";
-    final private String app_version = "1.0.2";
+    final private String app_version = BuildConfig.VERSION_NAME;
     final private String brain_location_url = "https://abhaytr.github.io/digifriend/Brain.txt";
     private String uid;
     private ScheduledExecutorService ses;
@@ -67,6 +72,7 @@ public class MainActivity extends Activity implements OnInitListener
     private final String PERMISSION_TEXT = "Please note that your phone's volume levels will be controlled by our app <b>only when you are in our app</b> for best user experience. Your audio will automatically be restored to your preset levels when you exit the app.<br><br>Kindly provide me microphone permission so that I can hear you.";
     private boolean first_run = true;
     final private String BRAIN_NOT_FOUND_FIRST = "DigiFriend needs to know where it's brain is so that it can use it. Right now for some reason it cannot locate it.<br><br>Kindly check your internet connection and restart the app or try again after some time";
+    private MediaPlayer mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -74,6 +80,25 @@ public class MainActivity extends Activity implements OnInitListener
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        mPlayer = MediaPlayer.create(MainActivity.this, R.raw.hbd);
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+        {
+            @Override
+            public void onCompletion(MediaPlayer mp)
+            {
+                handleHappyBirthday();
+            }
+
+        });
+        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener()
+        {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra)
+            {
+                handleHappyBirthday();
+                return false;
+            }
+        });
         queue = Volley.newRequestQueue(this);
         uid = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         ses = Executors.newSingleThreadScheduledExecutor();
@@ -87,6 +112,28 @@ public class MainActivity extends Activity implements OnInitListener
             public void onClick(View v)
             {
                 alert("Credits for DigiFriend App", "<br>DigiFriend is an intellectual property of Abhay Tripathi.<br><br>Only Talking Tom is an intellectual property of Outfit7 Ltd.<br><br><b>© Abhay Tripathi</b>", "OK");
+            }
+        });
+        resetBtn = findViewById(R.id.reset);
+        resetBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (friend_throat.isSpeaking())
+                {
+                    MainActivity.this.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            friend_throat.stop();
+                            friend_body.stop();
+                            friend.setBackgroundResource(R.drawable.a1);
+                            reset();
+                        }
+                    });
+                }
             }
         });
         about = findViewById(R.id.about);
@@ -277,6 +324,22 @@ public class MainActivity extends Activity implements OnInitListener
         tts_no = 1;
     }
 
+    private void handleHappyBirthday()
+    {
+        MainActivity.this.runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                friend_body.stop();
+                celebration_body.stop();
+                celebration.setVisibility(View.GONE);
+                friend.setBackgroundResource(R.drawable.a1);
+            }
+        });
+        reset();
+    }
+
     private void happyBirthday()
     {
         MainActivity.this.runOnUiThread(new Runnable()
@@ -293,27 +356,7 @@ public class MainActivity extends Activity implements OnInitListener
                 celebration_body.start();
             }
         });
-        MediaPlayer mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.hbd);
         mPlayer.start();
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-        {
-            @Override
-            public void onCompletion(MediaPlayer mp)
-            {
-                MainActivity.this.runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        friend_body.stop();
-                        celebration_body.stop();
-                        celebration.setVisibility(View.GONE);
-                        friend.setBackgroundResource(R.drawable.a1);
-                    }
-                });
-                reset();
-            }
-        });
     }
 
     protected void customOutput(String message)
@@ -342,6 +385,7 @@ public class MainActivity extends Activity implements OnInitListener
                                 @Override
                                 public void run()
                                 {
+                                    resetBtn.setVisibility(View.VISIBLE);
                                     status.setText("🗣️ Speaking...");
                                     friend.setBackgroundResource(R.drawable.bg_gif);
                                     friend_body = (AnimationDrawable) friend.getBackground();
@@ -454,7 +498,15 @@ public class MainActivity extends Activity implements OnInitListener
                 }
                 else if (actionCode == 1)
                 {
-                    happyBirthday();
+                    try
+                    {
+                        happyBirthday();
+                    }
+                    catch (Exception ex)
+                    {
+                        Toast.makeText(MainActivity.this, ex.toString(), Toast.LENGTH_LONG).show();
+                        speak("I am unable to recall the Happy Birthday song. Kindly contact Mr. Abhay Tripathi to get the issue fixed.", "friend");
+                    }
                 }
             }
         },
@@ -600,6 +652,7 @@ public class MainActivity extends Activity implements OnInitListener
 
     private void reset()
     {
+        resetBtn.setVisibility(View.INVISIBLE);
         tts_lst = new String[]{};
         tts_no = 0;
         busy = false;
